@@ -3,8 +3,9 @@ import { useSession } from 'next-auth/react'
 import Image from 'next/image';
 import { CameraIcon, EmojiHappyIcon, VideoCameraIcon } from "@heroicons/react/solid"
 import { useRef, useState } from 'react';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 import { serverTimestamp, collection, addDoc } from "firebase/firestore";
+import { uploadString, ref } from '@firebase/storage';
 
 
 
@@ -36,6 +37,12 @@ function InputBox() {
             time: serverTimestamp(),
 
         });
+        if (ImageToPost) {
+            const postRef = ref(storage, `post/123`)
+            uploadString(postRef, ImageToPost, 'base64').then((snapshot) => {
+                console.log('Uploaded a base64 string!');
+            });
+        }
         inputRef.current.value = "";
 
     };
